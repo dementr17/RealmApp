@@ -48,7 +48,10 @@ class TaskListViewController: UITableViewController {
         var content = cell.defaultContentConfiguration()
         let taskList = taskLists[indexPath.row]
         content.text = taskList.name
-        content.secondaryText = "\(taskList.tasks.count)"
+        
+        let count = processing(taskList)
+        content.secondaryText = "\(count)"
+        
         cell.contentConfiguration = content
         return cell
     }
@@ -91,17 +94,23 @@ class TaskListViewController: UITableViewController {
     
 //MARK: Sorting Tasks
     @IBAction func sortingList(_ sender: UISegmentedControl) {
-        switch sender.selectedSegmentIndex {
-        case 0: StorageManager.shared.sorting(taskLists, true)
-        case 1: StorageManager.shared.sorting(taskLists, false)
-        default:
-            StorageManager.shared.sorting(taskLists, true)
-        }
-        tableView.reloadData()
+        sorting(sender)
     }
     
     @objc private func  addButtonPressed() {
         showAlert()
+    }
+    
+    private func processing(_ taskList: TaskList) -> String {
+        let countCurrentTask = taskList.tasks.filter("isComplete = false").count
+        let countCompletedTask = taskList.tasks.filter("isComplete = true").count
+        var resultCountTask: String!
+        if countCurrentTask == 0 && countCompletedTask != 0 {
+            resultCountTask = "✓"
+        } else {
+            resultCountTask = "\(countCurrentTask)"
+        }
+        return resultCountTask
     }
     
     //метод обращения к дата менеджеру, перезагружаем экран
@@ -141,5 +150,14 @@ extension TaskListViewController {
         let rowIndex = IndexPath(row: taskLists.index(of: taskList) ?? 0, section: 0)
         //обновляем ячейку по индексу
         tableView.insertRows(at: [rowIndex], with: .automatic)
+    }
+    private func sorting(_ sender: UISegmentedControl) {
+        switch sender.selectedSegmentIndex {
+        case 0: StorageManager.shared.sorting(taskLists, true)
+        default:
+            StorageManager.shared.sorting(taskLists, false)
+        }
+        taskLists = StorageManager.shared.realm.objects(TaskList.self)
+        tableView.reloadData()
     }
 }
