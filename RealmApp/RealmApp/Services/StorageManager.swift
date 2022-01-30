@@ -24,24 +24,24 @@ class StorageManager {
         //метод записи для DataManager(внесения изменений) всех списков, добавляем переданный массив
     }
     
-    func sorting(_ taskLists: Results<TaskList>, _ indicator: Bool) {
-        write {
-            if indicator {
+//    func sorting(_ taskLists: Results<TaskList>, _ indicator: Bool) {
+//        write {
+//            if indicator {
 //                print("A-Z ", taskLists)
 //                realm.objects(TaskList.self).sorted(by: KeyPath<TaskList, _HasPersistedType>)
-                taskLists.sorted { $0.date > $1.date }
+//                taskLists.sorted { $0.date > $1.date }
 //                print("Date ", taskLists)
 //                realm.add(newTaskLists)
-            } else {
+//            } else {
 //                let newTaskLists = taskLists
 //                realm.delete(taskLists)
 //                print("A-Z ", taskLists)
-                taskLists.sorted { $0.name < $1.name }
+//                taskLists.sorted { $0.name < $1.name }
 //                print("Date ", taskLists)
 //                realm.add(newTaskLists)
-            }
-        }
-    }
+//            }
+//        }
+//    }
     
     func save(_ taskList: TaskList) {
         write {

@@ -95,6 +95,7 @@ class TaskListViewController: UITableViewController {
 //MARK: Sorting Tasks
     @IBAction func sortingList(_ sender: UISegmentedControl) {
         sorting(sender)
+        tableView.reloadData()
     }
     
     @objc private func  addButtonPressed() {
@@ -152,12 +153,20 @@ extension TaskListViewController {
         tableView.insertRows(at: [rowIndex], with: .automatic)
     }
     private func sorting(_ sender: UISegmentedControl) {
-        switch sender.selectedSegmentIndex {
-        case 0: StorageManager.shared.sorting(taskLists, true)
-        default:
-            StorageManager.shared.sorting(taskLists, false)
+//        switch sender.selectedSegmentIndex {
+//        case 0: StorageManager.shared.sorting(taskLists, true)
+//        default:
+//            StorageManager.shared.sorting(taskLists, false)
+//        }
+//        taskLists = StorageManager.shared.realm.objects(TaskList.self)
+        if sender.selectedSegmentIndex == 0 {
+            // A-Z
+            self.taskLists = self.taskLists.sorted(byKeyPath: "name", ascending:true)
+//            taskLists = taskLists.sorted { $0.name > $1.name }
         }
-        taskLists = StorageManager.shared.realm.objects(TaskList.self)
-        tableView.reloadData()
+        else {
+            // Date
+            self.taskLists = self.taskLists.sorted(byKeyPath: "date", ascending:false)
+        }
     }
 }
